@@ -1,0 +1,37 @@
+- if @graph
+  %img{ src: @graph }
+-if @calculations
+  %table
+    %tr
+      %th Cost Basis
+      %th Expected Value
+    %tr
+      %th= @calculations[:cost_basis]
+      %th= @calculations[:ev]
+
+= form_for :underlying, url: '/ev' do |f|
+  %h3 Underlying
+  = f.text_field :spot, placeholder: 'spot price'
+  = f.text_field  :iv, placeholder: 'IV (ex: 15.3)'
+
+  %h3 Positions
+
+  .other-positions{ data: { position: 'group' } }
+    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
+    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
+    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
+    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
+
+
+    = f.fields_for :position do |p|
+      .single-position{ data: { position: 'original' } }
+        .single-position-form{ data: { position_number: '1'} }
+          = p.text_field  :strike, placeholder: 'strike price'
+          = p.text_field  :credit, placeholder: 'credit (absolute value)'
+          = p.radio_button :stance, 'long'
+          = p.label :stance_long, 'long'
+          = p.radio_button :stance, 'short'
+          = p.label :stance_short, 'short'
+  = f.button 'Add another position', { 'data-new-position' => true }
+  =f.submit 'Calculate'
+

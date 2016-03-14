@@ -16,6 +16,11 @@
 $ ->
   $('[data-new-position]').on 'click', (e) ->
     e.preventDefault()
-    $originalPositionForm = $('[data-position=original]')
+    $lastPositionForm = $('[data-position-number]')
+    lastPositionForm = $lastPositionForm[$lastPositionForm.length - 1]
+    lastNumber = parseInt(lastPositionForm.getAttribute('data-position-number'))
+    nextNumber = lastNumber + 1
+    newPositionForm = lastPositionForm.outerHTML.replace(new RegExp(lastNumber, "g"), nextNumber)
+    console.log newPositionForm
     $positionsGroup = $('[data-position=group]')
-    $positionsGroup.append $originalPositionForm.html()
+    $positionsGroup.append newPositionForm

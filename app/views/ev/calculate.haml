@@ -6,32 +6,33 @@
       %th Cost Basis
       %th Expected Value
     %tr
-      %th= @calculations[:cost_basis]
-      %th= @calculations[:ev]
+      %th= @calculations[:cost_basis].round(2)
+      %th= @calculations[:ev].round(2)
 
-= form_for :underlying, url: '/ev' do |f|
-  %h3 Underlying
-  = f.text_field :spot, placeholder: 'spot price'
-  = f.text_field  :iv, placeholder: 'IV (ex: 15.3)'
+= form_for :position, url: '/ev' do |p|
+  .underlying{ data: { underlying: true } }
+    %h3 Underlying
+    = p.fields_for :underlying do |u|
+      = u.text_field :spot, placeholder: 'spot price'
+      = u.text_field  :iv, placeholder: 'IV (ex: 15.3)'
 
-  %h3 Positions
-
-  .other-positions{ data: { position: 'group' } }
-    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
-    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
-    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
-    %input{ type: 'text', name: "positions[1][strike]", placeholder: 'strike price' }
-
-
-    = f.fields_for :position do |p|
-      .single-position{ data: { position: 'original' } }
+  .positions{ data: { position: 'group' } }
+    %h3 Positions
+    = p.fields_for :legs do |l|
+      = l.fields_for :'1' do |n|
         .single-position-form{ data: { position_number: '1'} }
-          = p.text_field  :strike, placeholder: 'strike price'
-          = p.text_field  :credit, placeholder: 'credit (absolute value)'
-          = p.radio_button :stance, 'long'
-          = p.label :stance_long, 'long'
-          = p.radio_button :stance, 'short'
-          = p.label :stance_short, 'short'
-  = f.button 'Add another position', { 'data-new-position' => true }
-  =f.submit 'Calculate'
-
+          = n.radio_button :type, 'call'
+          = n.label :type_call, 'call'
+          = n.radio_button :type, 'put'
+          = n.label :type_put, 'put'
+          = n.radio_button :type, 'stock'
+          = n.label :type_stock, 'stock'
+          = n.text_field  :strike, placeholder: 'strike price (ignore for stock)'
+          = n.text_field  :price, placeholder: 'price (absolute value)'
+          = n.text_field  :dte, placeholder: 'DTE'
+          = n.radio_button :stance, 'long'
+          = n.label :stance_long, 'long'
+          = n.radio_button :stance, 'short'
+          = n.label :stance_short, 'short'
+  = p.button 'Add another position', { 'data-new-position' => true }
+  = p.submit 'Calculate'

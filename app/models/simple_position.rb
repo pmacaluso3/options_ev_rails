@@ -6,16 +6,16 @@ module SimplePosition
   attr_reader :strike, :price, :stance, :dte
 
   def initialize(args = {})
-    @price = args[:price]
-    @strike = args[:strike]
+    @price = args[:price].to_f
+    @strike = args[:strike].to_f
     @stance = args[:stance]
-    @dte = args[:dte]
+    @dte = args[:dte].to_f
   end
 
   def stance_effect
     case stance
-    when :long then 1
-    when :short then -1
+    when 'long' then 1
+    when 'short' then -1
     end
   end
 

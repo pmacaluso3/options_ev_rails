@@ -3,10 +3,10 @@ module SimplePosition
   class StanceError < StandardError
   end
 
-  attr_reader :strike, :credit, :stance, :dte
+  attr_reader :strike, :price, :stance, :dte
 
   def initialize(args = {})
-    @credit = args[:credit]
+    @price = args[:price]
     @strike = args[:strike]
     @stance = args[:stance]
     @dte = args[:dte]
@@ -20,10 +20,10 @@ module SimplePosition
   end
 
   def value(underlying_price)
-    (payoff(underlying_price) + credit) * stance_effect
+    payoff(underlying_price) * stance_effect + credit
   end
 
-  def cost_basis_contribution
-    credit * (-stance_effect)
+  def credit
+    price * (-stance_effect)
   end
 end

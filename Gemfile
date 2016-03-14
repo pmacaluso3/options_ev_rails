@@ -1,8 +1,11 @@
 source 'https://rubygems.org'
 
 
+gem 'pry'
 gem 'haml'
 gem 'googlecharts'
+gem 'rspec-rails'
+gem 'factory_girl'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
